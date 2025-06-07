@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Student Results</title>
+    <style>
+        .excel-table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 25px 0;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            font-size: 14px;
+            min-width: 1200px;
+        }
+
+        .excel-table th {
+            background-color: #f0f5ff;
+            border: 1px solid #c9d1d9;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            color: #1f2937;
+        }
+
+        .excel-table td {
+            border: 1px solid #e5e7eb;
+            padding: 10px 15px;
+            color: #374151;
+            vertical-align: top;
+        }
+
+        .excel-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .excel-table tr:hover {
+            background-color: #f0f9ff;
+        }
+
+        .excel-table .numeric {
+            text-align: right;
+            font-family: 'Consolas', 'Menlo', monospace;
+        }
+
+        .excel-table .center {
+            text-align: center;
+        }
+
+        /* Grade-specific coloring */
+        .grade-A { background-color: #e8f5e9; color: #2e7d32; font-weight: 600; }
+        .grade-B { background-color: #fff8e1; color: #f57f17; }
+        .grade-C { background-color: #ffecb3; color: #ef6c00; }
+        .grade-D { background-color: #ffccbc; color: #d84315; }
+        .grade-F { background-color: #ffcdd2; color: #c62828; font-weight: 600; }
+
+        /* Header styling */
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .result-count {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* Print button */
+        .print-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .print-btn:hover {
+            background: #1e3a8a;
+        }
+
+        /* Search form styling */
+        .search-form {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #4b5563;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn-search {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 15px;
+            grid-column: span 2;
+            margin-top: 10px;
+        }
+
+        .btn-search:hover {
+            background: #1e3a8a;
+        }
+    </style>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="search-form">
+        <h2>Search Student Results</h2>
+        <form th:action="@{/student/get-results}" method="post" th:object="${searchResult}">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Student Name</label>
+                    <input type="text" th:field="*{studentName}" placeholder="Enter student name">
+                </div>
+
+                <div class="form-group">
+                    <label>Roll Number</label>
+                    <input type="number" th:field="*{rollNumber}" placeholder="Enter roll number">
+                </div>
+
+                <div class="form-group">
+                    <label>Semester</label>
+                    <input type="number" th:field="*{semester}" placeholder="Enter semester">
+                </div>
+
+                <div class="form-group">
+                    <label>Course</label>
+                    <input type="text" th:field="*{courseName}" placeholder="Enter course name">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-search">Search Results</button>
+        </form>
+    </div>
+
+    <div th:if="${results}">
+        <div class="table-header">
+            <div>
+                <div class="table-title">Student Results</div>
+                <div class="result-count" th:text="'Found ' + ${#lists.size(results)} + ' records'"></div>
+            </div>
+            <button class="print-btn" onclick="window.print()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
+                    <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                </svg>
+                Print Results
+            </button>
+        </div>
+
+        <div class="excel-table-container">
+            <table class="excel-table">
+                <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Roll Number</th>
+                    <th>Department</th>
+                    <th>Course</th>
+                    <th>Semester</th>
+                    <th>Subject</th>
+                    <th>Exam Name</th>
+                    <th>Marks Obtained</th>
+                    <th>Max Marks</th>
+                    <th>Grade</th>
+                    <th>Result Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="res : ${results}">
+                    <tr th:each="detail : ${res.results}">
+                        <td th:text="${res.studentName}"></td>
+                        <td class="numeric" th:text="${res.rollNumber}"></td>
+                        <td th:text="${res.departmentName}"></td>
+                        <td th:text="${res.courseName}"></td>
+                        <td class="center" th:text="${detail.semester}"></td>
+                        <td th:text="${detail.subjectName}"></td>
+                        <td th:text="${detail.examName}"></td>
+                        <td class="numeric" th:text="${detail.marksObtained}"></td>
+                        <td class="numeric" th:text="${detail.maxMarks}"></td>
+                        <td class="center" th:text="${detail.grade}"
+                            th:classappend="'grade-' + ${#strings.toUpperCase(detail.grade?.substring(0,1))}"></td>
+                        <td class="center" th:text="${#temporals.format(detail.resultDate, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
