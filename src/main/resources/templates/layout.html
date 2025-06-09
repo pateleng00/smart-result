@@ -350,11 +350,13 @@
   <nav>
     <a th:href="@{/student/add-student}" th:classappend="${#httpServletRequest.requestURI == '/student/add-student'} ? 'active'">Add Student</a>
     <a th:href="@{/student/results}" th:classappend="${#httpServletRequest.requestURI == '/student/result'} ? 'active'">Search Results</a>
+    <a th:href="@{/student/add-result}" th:classappend="${#httpServletRequest.requestURI == '/student/add-result'} ? 'active'">Add Results</a>
   </nav>
 </header>
 
 <main class="container">
-  <div th:replace="${content}"></div>
+  <div th:replace="~{::content}"></div>
+
 </main>
 
 <footer>
