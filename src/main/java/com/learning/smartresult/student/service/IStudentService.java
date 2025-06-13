@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IStudentService {
-    // Define methods for student operations here
+
      Page<StudentDetailsResponse> getAllStudents(Pageable pageable);
 
     void addStudent(AddStudent addStudent);
@@ -20,4 +20,5 @@ public interface IStudentService {
     List<StudentResultResponse> getStudentResults(StudentResultRequest su);
 
     void addStudentResult(AddResult addResultRequest);
+
 }

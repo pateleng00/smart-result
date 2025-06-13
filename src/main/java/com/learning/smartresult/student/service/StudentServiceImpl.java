@@ -78,7 +78,7 @@ public class StudentServiceImpl implements IStudentService{
             throw new RuntimeException("Subject not found with ID: " + addResultRequest.getSubjectId());
         }
 
-        List<Result> existingResults = resultRepository.findByStudentIdAndSubjectId(
+        Optional<Result> existingResults = resultRepository.findByStudentIdAndSubjectId(
                 addResultRequest.getStudentId(), addResultRequest.getSubjectId());
 
         if (!existingResults.isEmpty()) {
@@ -102,4 +102,5 @@ public class StudentServiceImpl implements IStudentService{
         resultRepository.save(result);
 
     }
+
 }

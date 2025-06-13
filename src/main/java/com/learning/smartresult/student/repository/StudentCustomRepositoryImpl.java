@@ -56,12 +56,13 @@ public class StudentCustomRepositoryImpl implements IStudentCustomRepository{
         // Pagination:
         query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
-
         List<Tuple> tuples = query.getResultList();
 
-        // You may want to query total count separately for Page metadata:
+        // FIXED COUNT QUERY (matches main query joins)
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<Student> countRoot = countQuery.from(Student.class);
+        Join<Student, Course> countCourseJoin = countRoot.join("course");
+        Join<Course, Department> countDeptJoin = countCourseJoin.join("department");
         countQuery.select(cb.count(countRoot))
                 .where(cb.equal(countRoot.get("status"), "Active"));
         Long total = entityManager.createQuery(countQuery).getSingleResult();
