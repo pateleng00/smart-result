@@ -17,6 +17,7 @@ public class StudentDetailsResponse {
     private LocalDateTime enrollmentDate;
     private List<String> subjectsEnrolled;
     private String department;
+    private String status; // e.g., Active, Inactive, Graduated
 
     // Additional fields can be added as needed
 }

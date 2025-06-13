@@ -7,6 +7,7 @@ import com.learning.smartresult.student.model.response.StudentResultResponse;
 import com.learning.smartresult.student.service.IStudentService;
 import lombok.AllArgsConstructor;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,9 +32,11 @@ public class StudentController {
     }
 
     @GetMapping("/add-student")
-    public String showAddStudentPage(Model model) {
+    public String showAddStudentPage(@RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "10") int size, Model model) {
+        Pageable pageable = PageRequest.of(page, size);
         model.addAttribute("newStudent", new AddStudent());
-        model.addAttribute("studentsPage", studentService.getAllStudents(Pageable.ofSize(10)));
+        model.addAttribute("studentsPage", studentService.getAllStudents(pageable));
         return "student-add";
     }
 
@@ -74,7 +77,6 @@ public class StudentController {
         model.addAttribute("addResult", new AddResult());
         return "add-result"; // Must match template name exactly
     }
-
 
 
 }

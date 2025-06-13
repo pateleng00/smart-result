@@ -48,7 +48,8 @@ public class StudentCustomRepositoryImpl implements IStudentCustomRepository{
                 studentRoot.get("address").alias("address"),
                 courseJoin.get("courseName").alias("courseName"),
                 studentRoot.get("enrollmentDate").alias("enrollmentDate"),
-                departmentJoin.get("departmentName").alias("departmentName")
+                departmentJoin.get("departmentName").alias("departmentName"),
+                studentRoot.get("status").alias("status") // Assuming status is a field in Student
         );
 
         TypedQuery<Tuple> query = entityManager.createQuery(cq);
@@ -78,6 +79,7 @@ public class StudentCustomRepositoryImpl implements IStudentCustomRepository{
             res.setEnrollmentDate(tuple.get("enrollmentDate", LocalDateTime.class));
             res.setDepartment(tuple.get("departmentName", String.class));
             res.setSubjectsEnrolled(getSubjectsForStudent(tuple.get("id", Long.class)));
+            res.setStatus(tuple.get("status", String.class)); // Assuming all fetched students are active
             return res;
         }).toList();
 
