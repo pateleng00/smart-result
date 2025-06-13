@@ -348,7 +348,7 @@
 <header>
   <h1>Smart Result Portal</h1>
   <nav>
-    <a th:href="@{/}" th:classappend="${#httpServletRequest.requestURI == '/'} ? 'active'">Home</a>
+    <a th:href="@{/}" th:classappend="${#httpServletRequest.requestURI == '/'} ? 'active'">🏠 <span>Home</span></a>
     <a th:href="@{/student/add-student}" th:classappend="${#httpServletRequest.requestURI == '/student/add-student'} ? 'active'">Add Student</a>
     <a th:href="@{/student/results}" th:classappend="${#httpServletRequest.requestURI == '/student/result'} ? 'active'">Search Results</a>
     <a th:href="@{/student/add-result}" th:classappend="${#httpServletRequest.requestURI == '/student/add-result'} ? 'active'">Add Results</a>

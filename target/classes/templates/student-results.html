@@ -239,7 +239,12 @@
             </table>
         </div>
     </div>
-    <a th:href="@{/}" class="opacity-80 hover:opacity-100 hover:text-success transition">Home</a>
+    <button onclick="window.location.href='/'"
+            class="flex items-center gap-1 text-sm font-medium text-gray-700 px-3 py-1.5 rounded-md bg-white border border-gray-300 hover:bg-green-100 hover:text-green-600 transition"
+            title="Go to Home">
+        🏠 <span>Home</span>
+    </button>
+
 </div>
 </body>
 </html>
