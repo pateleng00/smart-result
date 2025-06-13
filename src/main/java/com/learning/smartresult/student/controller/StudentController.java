@@ -22,11 +22,6 @@ import java.util.List;
 public class StudentController {
     private final IStudentService studentService;
 
-    @GetMapping("/")
-    public String home() {
-        return "home"; // this renders home.html which injects into layout
-    }
-
     @ControllerAdvice
     public class GlobalExceptionHandler {
         @ExceptionHandler(Exception.class)
